@@ -11,9 +11,9 @@ from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 def run_dim_reduction():
-    print(f"\n{'='*55}")
-    print(f"--- Generating High-Dimensional Dataset (10 Features) ---")
-    print(f"{'='*55}")
+    print("\n" + '='*55)
+    print("--- Generating High-Dimensional Dataset (10 Features) ---")
+    print('='*55)
     
     # 1. Generate 10-Dimensional Data 
     # TRICK: class_sep=2.5 pushes the clusters apart, resulting in much higher accuracy!
@@ -22,11 +22,11 @@ def run_dim_reduction():
                                class_sep=2.5, flip_y=0.02, random_state=42)
     
     # 2. Data Describe (EDA)
-    df = pd.DataFrame(X, columns=[f"Feature_{i+1}" for i in range(10)])
+    df = pd.DataFrame(X, columns=["Feature_{}".format(i+1) for i in range(10)])
     df['Target_Class'] = y
     print("\nData Description (First 5 rows of 10-D data):")
     print(df.head().round(2))
-    print(f"\nOriginal Dataset Shape: {X.shape}")
+    print("\nOriginal Dataset Shape: {}".format(X.shape))
     
     # 3. Scale the Data
     scaler = StandardScaler()
@@ -44,9 +44,9 @@ def run_dim_reduction():
 
     # 6. Loop through Reducers, Transform, Evaluate, and Plot
     for name, reducer in reducers.items():
-        print(f"\n{'='*55}")
-        print(f"--- Model: {name} ---")
-        print(f"{'='*55}")
+        print("\n" + '='*55)
+        print("--- Model: {} ---".format(name))
+        print('='*55)
         
         # Fit and Transform
         if "LDA" in name:
@@ -55,20 +55,20 @@ def run_dim_reduction():
             reducer.fit(X_train)          # PCA/SVD are Unsupervised
             
         X_test_reduced = reducer.transform(X_test)
-        print(f"Reduced Test Data Shape: {X_test_reduced.shape} (Compressed to 2D)")
+        print("Reduced Test Data Shape: {} (Compressed to 2D)".format(X_test_reduced.shape))
         
         # METRIC: Explained Variance
         variance = reducer.explained_variance_ratio_
         total_variance = np.sum(variance) * 100
-        print(f"Explained Variance per component: [{variance[0]:.4f}, {variance[1]:.4f}]")
-        print(f"Total Information Retained: {total_variance:.2f}%")
+        print("Explained Variance per component: [{:.4f}, {:.4f}]".format(variance[0], variance[1]))
+        print("Total Information Retained: {:.2f}%".format(total_variance))
         
         # LDA Specific Classification Metrics
         if "LDA" in name:
             preds = reducer.predict(X_test)
             acc = accuracy_score(y_test, preds)
-            print(f"\n=> LDA Classification Accuracy: {acc:.4f} ({acc*100:.2f}%)")
-            print(f"LDA Classification Report:\n{classification_report(y_test, preds)}")
+            print("\n=> LDA Classification Accuracy: {:.4f} ({:.2f}%)".format(acc, acc*100))
+            print("LDA Classification Report:\n{}".format(classification_report(y_test, preds)))
 
         # ==========================================
         # VISUALIZATION (Single Scatter Plot Only)
@@ -77,7 +77,7 @@ def run_dim_reduction():
         scatter = plt.scatter(X_test_reduced[:, 0], X_test_reduced[:, 1], c=y_test, 
                               cmap='Set1', edgecolor='k', alpha=0.7, s=60)
         
-        plt.title(f"{name}\n10 Features Compressed to 2 (Retained: {total_variance:.1f}%)")
+        plt.title("{}\n10 Features Compressed to 2 (Retained: {:.1f}%)".format(name, total_variance))
         plt.xlabel("Component 1")
         plt.ylabel("Component 2")
         

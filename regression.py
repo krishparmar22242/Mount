@@ -11,7 +11,7 @@ def run_regression(is_multiple=False):
     print("\n")
     print('=' * 50)
 
-    print(f"--- Running {regression_type} Linear Regression ---")
+    print("--- Running {} Linear Regression ---".format(regression_type))
     print('=' * 50)
 
     
@@ -21,7 +21,7 @@ def run_regression(is_multiple=False):
     X, y = make_regression(n_samples=500, n_features=n_features, noise=15.0, random_state=42)
     
     # 2. Data Describe (EDA)
-    df = pd.DataFrame(X, columns=[f"Feature_{i+1}" for i in range(n_features)])
+    df = pd.DataFrame(X, columns=["Feature_{}".format(i+1) for i in range(n_features)])
     df['Target'] = y
     print("\nData Description (First 5 rows):")
     print(df.head().round(2))
@@ -38,7 +38,7 @@ def run_regression(is_multiple=False):
     # 5. Predict and Evaluate
     preds = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, preds))
-    print(f"\n=> RESULT: {regression_type} Regression RMSE: {rmse:.2f}")
+    print("\n=> RESULT: {} Regression RMSE: {:.2f}".format(regression_type, rmse))
     
     # 5b. PRINT ACTUAL VS PREDICTED VALUES
     # We put them side-by-side in a DataFrame so it looks clean in the terminal
@@ -55,7 +55,7 @@ def run_regression(is_multiple=False):
         plt.plot(X_test, preds, color='red', linewidth=2, label='Regression Line')
         plt.xlabel("Feature_1")
         plt.ylabel("Target")
-        plt.title(f"Simple Linear Regression (RMSE: {rmse:.2f})")
+        plt.title("Simple Linear Regression (RMSE: {:.2f})".format(rmse))
     else:
         # Plot for MULTIPLE Regression (Actual vs Predicted)
         plt.scatter(y_test, preds, color='green', alpha=0.6)
@@ -66,7 +66,7 @@ def run_regression(is_multiple=False):
         
         plt.xlabel("Actual Target Values")
         plt.ylabel("Predicted Target Values")
-        plt.title(f"Multiple Linear Regression: Actual vs Predicted (RMSE: {rmse:.2f})")
+        plt.title("Multiple Linear Regression: Actual vs Predicted (RMSE: {:.2f})".format(rmse))
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.show()

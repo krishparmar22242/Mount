@@ -18,9 +18,9 @@ except ImportError:
     print("WARNING: scikit-learn-extra not installed. Skipping K-Medoids.")
 
 def run_clustering():
-    print(f"\n{'='*50}")
-    print(f"--- Generating Clustering Dataset ---")
-    print(f"{'='*50}")
+    print("\n" + '='*50)
+    print("--- Generating Clustering Dataset ---")
+    print('='*50)
     
     # 1. Generate Synthetic Data (cluster_std=1.2 adds spread/noise to make it challenging)
     # Using 2 features makes it perfectly plottable on a 2D graph!
@@ -51,9 +51,9 @@ def run_clustering():
 
     # 5. Loop through models, Train, Evaluate, and Plot
     for name, model in models.items():
-        print(f"\n{'='*50}")
-        print(f"--- Model: {name} ---")
-        print(f"{'='*50}")
+        print("\n" + '='*50)
+        print("--- Model: {} ---".format(name))
+        print('='*50)
         
         # Fit and Predict (EM uses .predict, others use .fit_predict)
         if name == "EM (Gaussian Mixture)":
@@ -66,16 +66,16 @@ def run_clustering():
         n_clusters_found = len(set(labels)) - (1 if -1 in labels else 0)
         n_noise_points = list(labels).count(-1)
         
-        print(f"Clusters Found: {n_clusters_found}")
+        print("Clusters Found: {}".format(n_clusters_found))
         if n_noise_points > 0:
-            print(f"Noise Points Detected: {n_noise_points}")
+            print("Noise Points Detected: {}".format(n_noise_points))
         
         # Calculate Metrics (Fails if DBSCAN groups everything into 1 cluster or pure noise)
         try:
             sil_score = silhouette_score(X_scaled, labels)
             db_score = davies_bouldin_score(X_scaled, labels)
-            print(f"=> Silhouette Score: {sil_score:.4f} (Closer to 1 is better)")
-            print(f"=> Davies-Bouldin Index: {db_score:.4f} (Closer to 0 is better)")
+            print("=> Silhouette Score: {:.4f} (Closer to 1 is better)".format(sil_score))
+            print("=> Davies-Bouldin Index: {:.4f} (Closer to 0 is better)".format(db_score))
         except ValueError:
             print("=> Metrics Error: Model found only 1 cluster or classified everything as noise.")
 
@@ -103,9 +103,9 @@ def run_clustering():
             
         # DBSCAN doesn't have centers, but it has noise
         if name == "DBSCAN" and n_noise_points > 0:
-            plt.title(f"{name} Clustering (Black/Dark points are Noise)")
+            plt.title("{} Clustering (Black/Dark points are Noise)".format(name))
         else:
-            plt.title(f"{name} Clustering")
+            plt.title("{} Clustering".format(name))
             
         plt.xlabel("Feature 1 (Scaled)")
         plt.ylabel("Feature 2 (Scaled)")

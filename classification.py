@@ -21,16 +21,16 @@ except ImportError:
     print("WARNING: xgboost not installed on this PC. Skipping XGBoost.")
 
 def run_classification():
-    print(f"\n{'='*50}")
-    print(f"--- Generating Classification Dataset ---")
-    print(f"{'='*50}")
+    print("\n" + '='*50)
+    print("--- Generating Classification Dataset ---")
+    print('='*50)
     
     # 1. Generate Synthetic Data (flip_y=0.1 adds 10% noise to the labels)
     X, y = make_classification(n_samples=800, n_features=5, n_informative=3, 
                                n_redundant=1, n_classes=2, flip_y=0.1, random_state=42)
     
     # 2. Data Describe (EDA)
-    df = pd.DataFrame(X, columns=[f"Feature_{i+1}" for i in range(5)])
+    df = pd.DataFrame(X, columns=["Feature_{}".format(i+1) for i in range(5)])
     df['Target_Class'] = y
     print("\nData Description (First 5 rows):")
     print(df.head().round(2))
@@ -64,9 +64,9 @@ def run_classification():
 
     # 6. Loop through each model, Train, Evaluate, and Plot!
     for name, model in models.items():
-        print(f"\n{'='*50}")
-        print(f"--- Model: {name} ---")
-        print(f"{'='*50}")
+        print("\n" + '='*50)
+        print("--- Model: {} ---".format(name))
+        print('='*50)
         
         # Train and Predict
         model.fit(X_train, y_train)
@@ -74,21 +74,21 @@ def run_classification():
         
         # Metrics
         acc = accuracy_score(y_test, preds)
-        print(f"=> RESULT: Accuracy: {acc:.4f}")
+        print("=> RESULT: Accuracy: {:.4f}".format(acc))
         
         # Actual vs Predicted Table (First 10 values)
         comparison_df = pd.DataFrame({'Actual Class': y_test, 'Predicted Class': preds})
         # Add a column that says True if they match, False if they don't
         comparison_df['Correct?'] = comparison_df['Actual Class'] == comparison_df['Predicted Class']
         
-        print(f"\n--- {name}: Actual vs Predicted (First 10) ---")
+        print("\n--- {}: Actual vs Predicted (First 10) ---".format(name))
         print(comparison_df.head(10))
         
-        print(f"\nClassification Report:\n{classification_report(y_test, preds)}")
+        print("\nClassification Report:\n{}".format(classification_report(y_test, preds)))
         
         # Confusion Matrix Visualization
         ConfusionMatrixDisplay.from_predictions(y_test, preds, cmap='Blues')
-        plt.title(f"{name}\nAccuracy: {acc:.2f}")
+        plt.title("{}\nAccuracy: {:.2f}".format(name, acc))
         plt.show()  # Closes the loop. You must close the graph window in VS Code to see the next model!
 
 # Run the master script

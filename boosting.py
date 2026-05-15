@@ -18,16 +18,16 @@ except ImportError:
     print("WARNING: xgboost not installed on this PC. Skipping XGBoost.")
 
 def run_boosting_experiments():
-    print(f"\n{'='*60}")
-    print(f"--- RUNNING BOOSTING EXPERIMENTS (SUPERVISED) ---")
-    print(f"{'='*60}")
+    print("\n" + '='*60)
+    print("--- RUNNING BOOSTING EXPERIMENTS (SUPERVISED) ---")
+    print('='*60)
     
     # 1. Generate Synthetic Data with Noise (flip_y=0.1)
     X, y = make_classification(n_samples=800, n_features=5, n_informative=3, 
                                n_redundant=1, n_classes=2, flip_y=0.1, random_state=42)
     
     # 2. Data Describe (EDA)
-    feature_names = [f"Feature_{i+1}" for i in range(5)]
+    feature_names = ["Feature_{}".format(i+1) for i in range(5)]
     df = pd.DataFrame(X, columns=feature_names)
     df['Target_Class'] = y
     
@@ -53,9 +53,9 @@ def run_boosting_experiments():
     
     # 6. Loop through each model, Train, Evaluate, and Plot
     for name, model in models.items():
-        print(f"\n{'='*50}")
-        print(f"--- Boosting Algorithm: {name} ---")
-        print(f"{'='*50}")
+        print("\n" + '='*50)
+        print("--- Boosting Algorithm: {} ---".format(name))
+        print('='*50)
         
         # Train and Predict
         model.fit(X_train, y_train)
@@ -63,17 +63,17 @@ def run_boosting_experiments():
         
         # 1. Accuracy Metric
         acc = accuracy_score(y_test, preds)
-        print(f"=> RESULT: Accuracy: {acc:.4f} ({acc*100:.2f}%)")
+        print("=> RESULT: Accuracy: {:.4f} ({:.2f}%)".format(acc, acc*100))
         
         # 2. Actual vs Predicted Table (First 10 values)
         comparison_df = pd.DataFrame({'Actual Class': y_test, 'Predicted Class': preds})
         comparison_df['Correct?'] = (comparison_df['Actual Class'] == comparison_df['Predicted Class'])
         
-        print(f"\n--- {name}: Actual vs Predicted Samples (First 10) ---")
+        print("\n--- {}: Actual vs Predicted Samples (First 10) ---".format(name))
         print(comparison_df.head(10))
         
         # 3. Full Classification Report (Precision, Recall, F1)
-        print(f"\nFull Classification Report for {name}:\n")
+        print("\nFull Classification Report for {}:\n".format(name))
         print(classification_report(y_test, preds))
         
         # 4. Feature Importance Plot (Special for Boosting)
@@ -81,13 +81,13 @@ def run_boosting_experiments():
         plt.figure(figsize=(8, 4))
         importances = model.feature_importances_
         plt.barh(feature_names, importances, color='skyblue', edgecolor='black')
-        plt.title(f"Feature Importances: {name}")
+        plt.title("Feature Importances: {}".format(name))
         plt.xlabel("Importance Score")
         plt.show()
 
         # 5. Confusion Matrix Visualization
         ConfusionMatrixDisplay.from_predictions(y_test, preds, cmap='Reds')
-        plt.title(f"Confusion Matrix: {name}")
+        plt.title("Confusion Matrix: {}".format(name))
         plt.show()
 
 # Execute the boosting script
